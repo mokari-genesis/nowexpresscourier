@@ -1,0 +1,50 @@
+# Dependencies
+node_modules/
+
+# Environment & secrets
+.env
+.env.*
+!.env.example
+
+# Logs
+logs/
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+# Client / Vite build & cache
+dist/
+build/
+.vite/
+.turbo/
+coverage/
+*.local
+
+# TypeScript
+*.tsbuildinfo
+
+# Serverless / AWS packaging
+.serverless/
+.esbuild/
+.aws-sam/
+packaged.yml
+
+# OS
+.DS_Store
+Thumbs.db
+
+# IDE / editor
+.idea/
+.vscode/*
+!.vscode/extensions.json
+!.vscode/settings.json
+*.swp
+*.swo
+
+# Optional local tooling
+.husky/_/
+.cache/
+tmp/
+temp/
