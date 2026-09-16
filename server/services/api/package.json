@@ -1,0 +1,13 @@
+{
+  "name": "core",
+  "version": "1.0.0",
+  "type": "module",
+  "description": "",
+  "main": "handler.js",
+  "scripts": {
+    "local": "node ../../scripts/link-node-modules.mjs && NODE_OPTIONS='--no-experimental-require-module --no-experimental-detect-module' AWS_PROFILE=traestodo ../../layers/node/node_modules/.bin/serverless offline --stage localhost --reloadHandler"
+  },
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {}
+}

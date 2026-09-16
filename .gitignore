@@ -1,5 +1,7 @@
 # Dependencies
 node_modules/
+# server/node_modules is a symlink into layers/node (created by npm run setup)
+server/node_modules
 
 # Environment & secrets
 .env

@@ -1,0 +1,10 @@
+node_modules
+dist
+build
+coverage
+.serverless
+.esbuild
+.vite
+package-lock.json
+*.tsbuildinfo
+.DS_Store

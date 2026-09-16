@@ -1,0 +1,12 @@
+{
+  "name": "server",
+  "version": "1.0.0",
+  "type": "module",
+  "private": true,
+  "description": "Serverless backend — runtime deps live only in layers/node",
+  "scripts": {
+    "setup": "npm --prefix layers/node install && node ./scripts/link-node-modules.mjs",
+    "format": "prettier --write \"**/*.{js,json,md,yml,yaml}\"",
+    "check-format": "prettier --check \"**/*.{js,json,md,yml,yaml}\""
+  }
+}

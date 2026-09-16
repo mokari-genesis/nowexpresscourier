@@ -1,30 +1,24 @@
-service: appTracker
+service: nowExpress
 plugins:
   - serverless-offline
 
 custom:
-  defaultNodePath: '../../layers/node/node_modules'
-  nodePathLib: '../layers/node/node_modules'
+  # ESM ignores NODE_PATH. Local bare imports resolve via server/node_modules
+  # symlink → layers/node/node_modules (see npm run setup in server/).
+  #
+  # Map --stage → Secrets Manager path segment (prod | dev).
+  # Anything not listed falls back to "dev".
+  secretEnvByStage:
+    prod: prod
+    dev: dev
+  secretEnv: ${self:custom.secretEnvByStage.${opt:stage}, 'dev'}
 
-  localhost:
-    environment:
-      NODE_PATH: ${self:custom.nodePathLib}:${self:custom.defaultNodePath}:../..:.
-      handlerPath: ../../
-
-  stages:
-    secrets:
-      production: 'production' # --stage=production
-      other: 'dev' # anything else
-    current: ${self:custom.stages.secrets.${opt:stage}, self:custom.stages.secrets.other}
-
-  apisecret: ${ssm:/aws/reference/secretsmanager/dev/kairo}
+  # Secrets Manager secret name must be exactly: prod/nowExpress | dev/nowExpress
+  apisecret: ${ssm:/aws/reference/secretsmanager/${self:custom.secretEnv}/nowExpress}
 
 provider:
   name: aws
-  runtime: nodejs18.x
-  nodeOptions:
-    # Required to enable fetch on node 18.
-    - --enable-undici
+  runtime: nodejs22.x
   versionFunctions: true
   stage: ${opt:stage}
   region: us-east-1
@@ -34,22 +28,22 @@ provider:
   environment:
     #ACCOUNT_ID: ${self:custom.apisecret.ACCOUNT_ID}
     #AWS_POOL_ID: ${self:custom.apisecret.AWS_POOL_ID}
-    NODE_PATH: ${self:custom.${opt:stage}.environment.NODE_PATH, ''}
     STAGE: ${self:provider.stage}
     CURRENT_ENV: ${self:provider.stage}
-    #DATABASE_HOST: ${self:custom.pgsecret.HOST}
-    #DATABASE_USER: ${self:custom.pgsecret.USERNAME}
-    #DATABASE_NAME: ${self:custom.pgsecret.DBNAME}
-    #DATABASE_PASSWORD: ${self:custom.pgsecret.PASSWORD}
-    #DATABASE_PORT: ${self:custom.pgsecret.PORT}
+    APP_ENV: ${self:custom.secretEnv}
+    DATABASE_NAME: ${self:custom.apisecret.DB_NAME}
 
   iamRoleStatements:
     - Effect: Allow
       Action:
         - lambda:InvokeAsync
         - lambda:InvokeFunction
-
       Resource: '*'
+    - Effect: Allow
+      Action:
+        - secretsmanager:GetSecretValue
+      Resource:
+        - arn:aws:secretsmanager:${aws:region}:${aws:accountId}:secret:nowExpress/*
 
 package:
   include:
