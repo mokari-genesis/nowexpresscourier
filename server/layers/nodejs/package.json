@@ -6,7 +6,9 @@
   "author": "mokari",
   "license": "MIT",
   "dependencies": {
+    "@aws-sdk/client-s3": "^3.1134.0",
     "@aws-sdk/client-secrets-manager": "^3.347.0",
+    "@aws-sdk/s3-request-presigner": "^3.1134.0",
     "jsonwebtoken": "^9.0.2",
     "jwk-to-pem": "^2.0.7",
     "mysql2": "^3.24.4"

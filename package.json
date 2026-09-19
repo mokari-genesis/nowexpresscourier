@@ -6,7 +6,11 @@
     "format": "prettier --write \"server/**/*.{js,json,md,yml,yaml}\" \"client/**/*.{ts,tsx,css,json,md}\"",
     "format:check": "prettier --check \"server/**/*.{js,json,md,yml,yaml}\" \"client/**/*.{ts,tsx,css,json,md}\"",
     "prepare": "husky install",
-    "setup:server": "npm --prefix server run setup"
+    "setup:server": "npm --prefix server run setup",
+    "deploy-dev:layers": "AWS_PROFILE=${AWS_PROFILE:-traestodo} sh -c 'cd server/layers && ./nodejs/node_modules/.bin/serverless deploy --stage dev'",
+    "deploy-prod:layers": "AWS_PROFILE=${AWS_PROFILE:-traestodo} sh -c 'cd server/layers && ./nodejs/node_modules/.bin/serverless deploy --stage prod'",
+    "deploy-dev:api": "AWS_PROFILE=${AWS_PROFILE:-traestodo} sh -c 'cd server/services/api && ../../layers/nodejs/node_modules/.bin/serverless deploy --stage dev'",
+    "deploy-prod:api": "AWS_PROFILE=${AWS_PROFILE:-traestodo} sh -c 'cd server/services/api && ../../layers/nodejs/node_modules/.bin/serverless deploy --stage prod'"
   },
   "devDependencies": {
     "husky": "^9.0.0",

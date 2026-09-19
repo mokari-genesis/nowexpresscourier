@@ -3,11 +3,6 @@ plugins:
   - serverless-offline
 
 custom:
-  # ESM ignores NODE_PATH. Local bare imports resolve via server/node_modules
-  # symlink → layers/node/node_modules (see npm run setup in server/).
-  #
-  # Map --stage → Secrets Manager path segment (prod | dev).
-  # Anything not listed falls back to "dev".
   secretEnvByStage:
     prod: prod
     dev: dev
@@ -32,6 +27,8 @@ provider:
     CURRENT_ENV: ${self:provider.stage}
     APP_ENV: ${self:custom.secretEnv}
     DATABASE_NAME: ${self:custom.apisecret.DB_NAME}
+    S3_BUCKET: ${self:custom.apisecret.BUCKET}
+    EXPORT_URL_TTL_SECONDS: ${self:custom.apisecret.EXPORT_URL_TTL_SECONDS, '900'}
 
   iamRoleStatements:
     - Effect: Allow
@@ -44,19 +41,25 @@ provider:
         - secretsmanager:GetSecretValue
       Resource:
         - arn:aws:secretsmanager:${aws:region}:${aws:accountId}:secret:nowExpress/*
+    - Effect: Allow
+      Action:
+        - s3:PutObject
+        - s3:GetObject
+      Resource:
+        - arn:aws:s3:::${self:custom.apisecret.BUCKET}/exports/*
 
 package:
   include:
     - ../../libs/**
     - ../../vendor/**
     - ../../entityQueries/**
-    - ../../utils/**
   exclude:
     - node_modules/**
+    - '**/*.test.js'
 
 functions:
   proxy:
-    timeout: 30
+    timeout: 60
     memorySize: 2048
     handler: handler.app
     events:
@@ -75,5 +78,5 @@ functions:
               - X-Amz-User-Agent
               - app_id
               - device_id
-    #layers:
-    #  - ${self:custom.apisecret.LAYERS}
+    layers:
+      - ${cf:layers-${self:custom.secretEnv}.NodejsLayerExport}

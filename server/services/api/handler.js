@@ -42,6 +42,8 @@ export const app = async event => {
     */
     const user = {
       email: 'm@m.com',
+      // Stub until real auth is wired — keeps non-public routes usable locally.
+      authorised: true,
     }
     //isAuthorized is a function that checks if the user is authorized to access the api
     if (!route.public) {

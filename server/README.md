@@ -9,7 +9,7 @@ This project is a Serverless application structured for AWS Lambda, using shared
 ## 📂 Project Structure
 
 - **`layers/`**: Contains shared dependencies (node_modules) for all Lambda functions.
-  - `layers/node`: The primary Node.js layer. Dependencies are installed here to optimize Lambda deployment size.
+  - `layers/nodejs`: The primary Node.js layer (`nodejs/` is required by Lambda). Dependencies are installed here to optimize deployment size.
 - **`libs/`**: Shared utility code used across different services (Database connections, Logging, JWT, etc.).
 - **`services/`**: Contains the actual microservices (Lambda functions).
   - `services/api`: The core API service.
@@ -37,7 +37,7 @@ This ensures that your code is automatically formatted when you commit.
 Next, install the **Runtime Dependencies** in the shared layer:
 
 ```bash
-cd layers/node
+cd layers/nodejs
 npm install
 ```
 
@@ -63,7 +63,7 @@ We use **Prettier** to enforce code style. This is configured to run automatical
 
 ### Adding Dependencies
 
-If you need to add a dependency that is shared across services, add it to `layers/node/package.json` and run `npm install` there.
+If you need to add a dependency that is shared across services, add it to `layers/nodejs/package.json` and run `npm install` there.
 
 ### Imports
 

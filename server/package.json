@@ -3,10 +3,13 @@
   "version": "1.0.0",
   "type": "module",
   "private": true,
-  "description": "Serverless backend — runtime deps live only in layers/node",
+  "description": "Serverless backend — runtime deps live only in layers/nodejs",
   "scripts": {
-    "setup": "npm --prefix layers/node install && node ./scripts/link-node-modules.mjs",
+    "setup": "npm --prefix layers/nodejs install && node ./scripts/link-node-modules.mjs",
     "format": "prettier --write \"**/*.{js,json,md,yml,yaml}\"",
-    "check-format": "prettier --check \"**/*.{js,json,md,yml,yaml}\""
+    "check-format": "prettier --check \"**/*.{js,json,md,yml,yaml}\"",
+    "test": "node --test --test-force-exit \"entityQueries/**/*.test.js\" \"libs/**/*.test.js\"",
+    "test:guides": "node --test --test-force-exit entityQueries/guides.test.js",
+    "test:export": "node --test --test-force-exit libs/guidesExport.test.js"
   }
 }

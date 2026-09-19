@@ -2,11 +2,18 @@ import {
   SecretsManagerClient,
   GetSecretValueCommand,
 } from '@aws-sdk/client-secrets-manager'
+import { PutObjectCommand, GetObjectCommand, S3Client } from '@aws-sdk/client-s3'
+import { getSignedUrl } from '@aws-sdk/s3-request-presigner'
 
 const MYSQL_SECRET_ID = 'nowExpress/MySql'
+const AWS_REGION = process.env.AWS_REGION || 'us-east-1'
 
-const client = new SecretsManagerClient({
-  region: process.env.AWS_REGION || 'us-east-1',
+const secretsClient = new SecretsManagerClient({
+  region: AWS_REGION,
+})
+
+const s3Client = new S3Client({
+  region: AWS_REGION,
 })
 
 /** In-memory cache for warm Lambda containers — avoids Secrets Manager calls per request. */
@@ -22,7 +29,7 @@ export async function getSecret(secretId, { forceRefresh = false } = {}) {
     return secretCache.get(secretId)
   }
 
-  const response = await client.send(
+  const response = await secretsClient.send(
     new GetSecretValueCommand({
       SecretId: secretId,
       VersionStage: 'AWSCURRENT',
@@ -91,5 +98,50 @@ export async function getMysqlConfig(options = {}) {
     password: mysqlSecret.password ?? mysqlSecret.PASSWORD,
     database,
     ...(mysqlSecret.ssl !== undefined ? { ssl: mysqlSecret.ssl } : {}),
+  }
+}
+
+/**
+ * Upload a file to S3 and return a short-lived presigned GET URL.
+ * Pure infra helper — caller owns key naming and file contents.
+ */
+export async function uploadExportFile({
+  bucket,
+  key,
+  body,
+  contentType = 'text/csv; charset=utf-8',
+  contentDisposition = 'attachment; filename="guides.csv"',
+  expiresIn = 900,
+} = {}) {
+  if (!bucket) throw new Error('bucket is required')
+  if (!key) throw new Error('key is required')
+  if (body === undefined || body === null) throw new Error('body is required')
+
+  const ttl = Math.max(1, Number(expiresIn) || 900)
+
+  await s3Client.send(
+    new PutObjectCommand({
+      Bucket: bucket,
+      Key: key,
+      Body: body,
+      ContentType: contentType,
+      ContentDisposition: contentDisposition,
+    })
+  )
+
+  const url = await getSignedUrl(
+    s3Client,
+    new GetObjectCommand({
+      Bucket: bucket,
+      Key: key,
+    }),
+    { expiresIn: ttl }
+  )
+
+  return {
+    url,
+    key,
+    expiresAt: new Date(Date.now() + ttl * 1000).toISOString(),
+    expiresIn: ttl,
   }
 }

@@ -5,16 +5,27 @@ frameworkVersion: '3'
 provider:
   name: aws
   region: us-east-1
-  runtime: nodejs18.x
+  runtime: nodejs22.x
+
+package:
+  patterns:
+    - '!**'
+    - 'nodejs/**'
+    - '!nodejs/node_modules/**/*.test.js'
+    - '!nodejs/node_modules/serverless/**'
+    - '!nodejs/node_modules/serverless-offline/**'
+    - '!nodejs/node_modules/.bin/serverless*'
+    - '!nodejs/node_modules/.bin/sls'
 
 layers:
   nodejs:
-    name: slsv2-${opt:stage, 'dev'}-layers
-    description: 'slsv2 dependencies'
-    path: ../layers
+    name: nowExpress-${opt:stage, 'dev'}-layers
+    description: 'nowExpress dependencies'
+    # Zip root must contain nodejs/node_modules (Lambda Node.js convention).
+    path: .
     compatibleRuntimes:
-      - nodejs18.x
-      - nodejs16.x
+      - nodejs22.x
+      - nodejs24.x
 
 resources:
   Outputs:
@@ -22,4 +33,4 @@ resources:
       Value:
         Ref: NodejsLambdaLayer
       Export:
-        Name: slsv2-${opt:stage, 'dev'}-NodejsLambdaLayer
+        Name: nowExpress-${opt:stage, 'dev'}-NodejsLambdaLayer
