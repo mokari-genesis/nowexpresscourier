@@ -6,6 +6,9 @@ import { LoginPage } from "@/features/auth/pages/LoginPage";
 import { DashboardPage } from "@/features/dashboard/pages/DashboardPage";
 import { ExampleListPage } from "@/features/example/pages/ExampleListPage";
 import { ExampleDetailPage } from "@/features/example/pages/ExampleDetailPage";
+import { TicketsListPage } from "@/features/tickets/pages/TicketsListPage";
+import { TicketCreatePage } from "@/features/tickets/pages/TicketCreatePage";
+import { TicketDetailPage } from "@/features/tickets/pages/TicketDetailPage";
 import { NotFoundPage } from "@/app/layout/NotFoundPage";
 import { ErrorBoundaryFallback } from "@/app/layout/ErrorBoundaryFallback";
 
@@ -29,6 +32,9 @@ export const router = createBrowserRouter([
     children: [
       { index: true, element: <Navigate to={ROUTES.dashboard} replace /> },
       { path: "dashboard", element: <DashboardPage /> },
+      { path: "tickets", element: <TicketsListPage /> },
+      { path: "tickets/new", element: <TicketCreatePage /> },
+      { path: "tickets/:id", element: <TicketDetailPage /> },
       { path: "example", element: <ExampleListPage /> },
       { path: "example/:id", element: <ExampleDetailPage /> },
     ],

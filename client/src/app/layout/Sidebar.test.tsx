@@ -29,6 +29,7 @@ describe("Sidebar role-based nav", () => {
     );
 
     expect(screen.getByRole("link", { name: /dashboard/i })).toBeInTheDocument();
+    expect(screen.getByRole("link", { name: /tickets/i })).toBeInTheDocument();
     expect(screen.getByRole("link", { name: /example/i })).toBeInTheDocument();
     expect(screen.queryByRole("link", { name: /admin/i })).not.toBeInTheDocument();
   });

@@ -1,6 +1,13 @@
 import * as React from "react";
 import { NavLink } from "react-router-dom";
-import { LayoutDashboard, List, Settings, PanelLeftClose, PanelLeft } from "lucide-react";
+import {
+  LayoutDashboard,
+  List,
+  Settings,
+  PanelLeftClose,
+  PanelLeft,
+  Ticket,
+} from "lucide-react";
 import { cn } from "@/shared/utils/cn";
 import { ROUTES } from "@/app/config/routes";
 import { RoleGate } from "@/app/router/RoleGate";
@@ -14,6 +21,7 @@ interface SidebarProps {
 
 const navItems = [
   { to: ROUTES.dashboard, label: "Dashboard", icon: LayoutDashboard },
+  { to: ROUTES.tickets, label: "Tickets", icon: Ticket },
   { to: ROUTES.example, label: "Example", icon: List },
   {
     to: "/app/admin",

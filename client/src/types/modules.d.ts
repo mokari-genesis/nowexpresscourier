@@ -5,19 +5,6 @@
  * Remove or simplify once package types resolve correctly.
  */
 
-declare module "@tanstack/query-core" {
-  export class QueryClient {
-    constructor(options?: {
-      defaultOptions?: {
-        queries?: { retry?: number; staleTime?: number };
-        mutations?: { retry?: number };
-      };
-    });
-    invalidateQueries(options?: { queryKey?: readonly unknown[] }): Promise<void>;
-    getMutationCache(): unknown;
-  }
-}
-
 declare module "react-hook-form" {
   export type FieldValues = Record<string, unknown>;
   export type FieldPath<T extends FieldValues> = keyof T & string;

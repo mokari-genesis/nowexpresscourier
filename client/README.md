@@ -17,25 +17,28 @@ Data fetching uses **native fetch** (no axios). No MSW; repositories can use in-
 ## Quick start
 
 ```bash
-npm install
-npm run dev
+corepack enable
+pnpm install
+pnpm dev
 ```
 
 Open [http://localhost:5173](http://localhost:5173). Sign in with any email/password and a role (template auth; state in localStorage).
+
+This app uses **pnpm** (see `packageManager` in `package.json`). The server packages in this monorepo still use npm.
 
 ## Scripts
 
 | Script                 | Description                |
 | ---------------------- | -------------------------- |
-| `npm run dev`          | Start dev server           |
-| `npm run build`        | Production build           |
-| `npm run preview`      | Preview production build   |
-| `npm run typecheck`    | TypeScript check (no emit) |
-| `npm run lint`         | ESLint                     |
-| `npm run format`       | Prettier (write)           |
-| `npm run format:check` | Prettier (check)           |
-| `npm run test`         | Vitest (watch)             |
-| `npm run test:run`     | Vitest (single run)        |
+| `pnpm dev`             | Start dev server           |
+| `pnpm build`           | Production build           |
+| `pnpm preview`         | Preview production build   |
+| `pnpm typecheck`       | TypeScript check (no emit) |
+| `pnpm lint`            | ESLint                     |
+| `pnpm format`          | Prettier (write)           |
+| `pnpm format:check`    | Prettier (check)           |
+| `pnpm test`            | Vitest (watch)             |
+| `pnpm test:run`        | Vitest (single run)        |
 
 ## Project structure
 
@@ -187,7 +190,7 @@ Keep **shared** for things used by more than one feature; keep **services** for 
   - Mock `@/features/auth/context/AuthContext` (e.g. `useAuth`) for auth-dependent behavior.
   - Mock repositories (e.g. `exampleRepo.listExamples`) to control data and assert calls.
   - Use `initialRoute` for route-dependent tests; assert redirects by checking that protected content is not in the document.
-- Run: `npm run test` (watch) or `npm run test:run` (single run).
+- Run: `pnpm test` (watch) or `pnpm test:run` (single run).
 
 ---
 
@@ -220,8 +223,8 @@ Keep **shared** for things used by more than one feature; keep **services** for 
 
 ## Quality bar
 
-After `npm install`, the following must succeed:
+After `pnpm install`, the following must succeed:
 
-- `npm run typecheck`
-- `npm run lint`
-- `npm run test:run`
+- `pnpm typecheck`
+- `pnpm lint`
+- `pnpm test:run`
