@@ -8,5 +8,8 @@ export const ROUTES = {
   dashboard: "/app/dashboard",
   example: "/app/example",
   exampleDetail: (id: string) => `/app/example/${id}`,
+  tickets: "/app/tickets",
+  ticketNew: "/app/tickets/new",
+  ticketDetail: (id: string) => `/app/tickets/${id}`,
   notFound: "*",
 } as const;
